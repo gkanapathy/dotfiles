@@ -22,14 +22,4 @@ See [`starship/README.md`](starship/README.md). Interactive Fish sessions rebuil
 
 ## GitHub
 
-Create a private remote (once):
-
-```bash
-cd ~/dotfiles
-git init
-git add .
-git commit -m "Initial dotfiles: fish + starship preset merge"
-gh repo create dotfiles --private --source=. --remote=origin --push
-```
-
-Use your GitHub username if the repo is under an org or different name.
+Remote: [github.com/gkanapathy/dotfiles](https://github.com/gkanapathy/dotfiles) (private). Clone with `gh repo clone gkanapathy/dotfiles` or SSH as usual.
