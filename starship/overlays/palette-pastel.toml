@@ -1,0 +1,13 @@
+# Gruvbox palette slot names remapped to Pastel powerline ladder (approximate).
+
+[palettes.gruvbox_dark]
+color_fg0 = "#f8f8f2"
+color_bg1 = "#33658A"
+color_bg3 = "#06969A"
+color_blue = "#86BBD8"
+color_aqua = "#FCA17D"
+color_green = "#86BBD8"
+color_orange = "#9A348E"
+color_purple = "#9A348E"
+color_red = "#DA627D"
+color_yellow = "#DA627D"

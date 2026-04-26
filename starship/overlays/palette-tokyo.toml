@@ -1,0 +1,13 @@
+# Gruvbox palette slot names with Tokyo Night–style colors (approximate).
+
+[palettes.gruvbox_dark]
+color_fg0 = "#c0caf5"
+color_bg1 = "#1a1b26"
+color_bg3 = "#3b4261"
+color_blue = "#16161e"
+color_aqua = "#3b4261"
+color_green = "#9ece6a"
+color_orange = "#bb9af7"
+color_purple = "#bb9af7"
+color_red = "#f7768e"
+color_yellow = "#7aa2f7"

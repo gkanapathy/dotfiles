@@ -1,0 +1,13 @@
+# Gruvbox palette slot names remapped to Catppuccin mocha–like hues.
+
+[palettes.gruvbox_dark]
+color_fg0 = "#11111b"
+color_bg1 = "#b4befe"
+color_bg3 = "#74c7ec"
+color_blue = "#a6e3a1"
+color_aqua = "#f9e2af"
+color_green = "#a6e3a1"
+color_orange = "#f38ba8"
+color_purple = "#cba6f7"
+color_red = "#f38ba8"
+color_yellow = "#fab387"

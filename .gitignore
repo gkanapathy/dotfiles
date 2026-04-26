@@ -1,0 +1,4 @@
+.DS_Store
+starship/.venv/
+starship/__pycache__/
+*.pyc
