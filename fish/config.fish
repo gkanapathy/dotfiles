@@ -23,7 +23,6 @@ if status is-interactive
     else if test -f "$_palette"
         starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --palette "$_palette" --out "$HOME/.config/starship.toml"
     else
-        echo "dotfiles: STARSHIP_THEME '$STARSHIP_THEME' has no palette file, using layout only (upstream gruvbox palette)" >&2
         starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
     end
 

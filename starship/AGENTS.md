@@ -40,7 +40,7 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 
 ## Theme selection
 
-- **`STARSHIP_THEME`** (Fish) — default **`gruvbox`**: merge **layout only** (upstream `[palettes.gruvbox_dark]` unchanged). Set to **`tokyo`**, **`catppuccin`**, or **`pastel`** to also merge `overlays/palette-$STARSHIP_THEME.toml`. Any other value with no matching palette file falls back to layout-only (same as gruvbox colors) and Fish prints a warning.
+- **`STARSHIP_THEME`** (Fish) — default **`gruvbox`**: merge **layout only** (upstream `[palettes.gruvbox_dark]` unchanged). Set to **`tokyo`**, **`catppuccin`**, or **`pastel`** to also merge `overlays/palette-$STARSHIP_THEME.toml`. Any other value with no matching palette file falls back to layout-only (same upstream gruvbox colors), silently.
 - **`DOTFILES`** — Root of the dotfiles repo; defaults to `$HOME/dotfiles`. Paths to overlays and the script are derived from this.
 
 **Why no `palette-gruvbox.toml`:** Duplicating the upstream hex table would drift when Starship updates the preset; omitting `--palette` keeps true upstream colors for the default.
@@ -48,7 +48,7 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 ## Adding a new theme
 
 1. Add `overlays/palette-<newname>.toml` with a full `[palettes.gruvbox_dark]` table (all keys the gruvbox preset expects).
-2. Teach Fish (or your wrapper) to set `STARSHIP_THEME` to `<newname>` when that file exists.
+2. In **`../fish/config.fish`**, extend the branch logic if the name is not covered by “`gruvbox` → no palette” / “file exists → `--palette`” / “else warn + layout-only”.
 
 ## Adding layout changes
 
