@@ -1,9 +1,6 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 set -gx COPYFILE_DISABLE 1
 
-# Created by `pipx` on 2022-01-14 22:18:24
-export PATH="$PATH:/Users/gkanapathy/.local/bin"
-
 if status is-interactive
     set -gx RIPGREP_CONFIG_PATH "$HOME/.ripgreprc"
     set -gx EDITOR nvim
