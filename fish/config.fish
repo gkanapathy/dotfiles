@@ -14,14 +14,16 @@ if status is-interactive
 
     # Dotfiles root (override if repo lives elsewhere)
     set -q DOTFILES; or set -gx DOTFILES "$HOME/dotfiles"
-    # tokyo | catppuccin | pastel — picks overlays/palette-<name>.toml
-    set -q STARSHIP_THEME; or set -gx STARSHIP_THEME catppuccin
+    # gruvbox = upstream preset colors (no palette overlay). tokyo | catppuccin | pastel = overlays/palette-<name>.toml
+    set -q STARSHIP_THEME; or set -gx STARSHIP_THEME gruvbox
 
     set -l _palette "$DOTFILES/starship/overlays/palette-$STARSHIP_THEME.toml"
-    if test -f "$_palette"
+    if test "$STARSHIP_THEME" = gruvbox
+        starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
+    else if test -f "$_palette"
         starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --palette "$_palette" --out "$HOME/.config/starship.toml"
     else
-        echo "dotfiles: STARSHIP_THEME '$STARSHIP_THEME' has no palette file, using layout only" >&2
+        echo "dotfiles: STARSHIP_THEME '$STARSHIP_THEME' has no palette file, using layout only (upstream gruvbox palette)" >&2
         starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
     end
 

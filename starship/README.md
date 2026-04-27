@@ -3,7 +3,7 @@
 Build `~/.config/starship.toml` from the upstream **gruvbox-rainbow** preset plus local overlays:
 
 1. **`overlays/layout.toml`** — catppuccin-style tail (`$cmd_duration` → `$line_break` → `$character`) with `[line_break] disabled = false`, plus shared `[cmd_duration]` and docker/conda fg tweaks.
-2. **`overlays/palette-*.toml`** — remap `[palettes.gruvbox_dark]` only (`tokyo`, `catppuccin`, `pastel`).
+2. **`overlays/palette-*.toml`** (optional) — remap `[palettes.gruvbox_dark]` only for alternate themes (`tokyo`, `catppuccin`, `pastel`). Default **`gruvbox`** uses the preset’s built-in palette (no palette file).
 
 ## Setup
 
@@ -25,4 +25,7 @@ starship preset gruvbox-rainbow \
 
 ## Themes
 
-Set `STARSHIP_THEME` to `tokyo`, `catppuccin`, or `pastel` (see `../fish/config.fish`).
+`STARSHIP_THEME` (Fish, see `../fish/config.fish`):
+
+- **`gruvbox`** (default) — layout overlay only; upstream **gruvbox-rainbow** colors.
+- **`tokyo`** \| **`catppuccin`** \| **`pastel`** — also merge `overlays/palette-<name>.toml`.

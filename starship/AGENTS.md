@@ -15,7 +15,7 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 | File | Role |
 |------|------|
 | `overlays/layout.toml` | Layout and behavior shared by all themes: root `format`, `[line_break]`, `[cmd_duration]`, and any cross-cutting module tweaks (e.g. docker/conda `format` using palette names). |
-| `overlays/palette-<name>.toml` | **Only** `[palettes.gruvbox_dark]` — same keys as upstream gruvbox (`color_fg0`, `color_orange`, …), new hex values so the rest of the preset (which references `fg:color_*` / `bg:color_*`) does not need rewrites per theme. |
+| `overlays/palette-<name>.toml` | **Only** `[palettes.gruvbox_dark]` — same keys as upstream gruvbox (`color_fg0`, `color_orange`, …), new hex values for **alternate** themes (`tokyo`, `catppuccin`, `pastel`). **No `palette-gruvbox.toml`** — default **gruvbox** skips this merge so colors stay exactly what `starship preset gruvbox-rainbow` ships. |
 
 **Do not** duplicate the entire gruvbox preset into overlays unless you intentionally want to override large sections; prefer minimal deltas.
 
@@ -40,8 +40,10 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 
 ## Theme selection
 
-- **`STARSHIP_THEME`** (Fish) — `tokyo` \| `catppuccin` \| `pastel` selects `overlays/palette-$STARSHIP_THEME.toml`.
+- **`STARSHIP_THEME`** (Fish) — default **`gruvbox`**: merge **layout only** (upstream `[palettes.gruvbox_dark]` unchanged). Set to **`tokyo`**, **`catppuccin`**, or **`pastel`** to also merge `overlays/palette-$STARSHIP_THEME.toml`. Any other value with no matching palette file falls back to layout-only (same as gruvbox colors) and Fish prints a warning.
 - **`DOTFILES`** — Root of the dotfiles repo; defaults to `$HOME/dotfiles`. Paths to overlays and the script are derived from this.
+
+**Why no `palette-gruvbox.toml`:** Duplicating the upstream hex table would drift when Starship updates the preset; omitting `--palette` keeps true upstream colors for the default.
 
 ## Adding a new theme
 
