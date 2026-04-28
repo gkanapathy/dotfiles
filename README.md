@@ -17,8 +17,10 @@ See [`starship/README.md`](starship/README.md). Interactive Fish sessions rebuil
 
 1. Clone this repo (e.g. `~/dotfiles`).
 2. `uv sync` inside `starship/`.
-3. Point Fish at this config, e.g. `ln -sf ~/dotfiles/fish/config.fish ~/.config/fish/config.fish`.
+3. Run `./install.sh` to symlink tracked dotfiles into `$HOME` (any pre-existing files are backed up to `<path>.backup.<timestamp>`).
 4. Set `DOTFILES` if the repo is not at `~/dotfiles`.
+
+To track a new dotfile, append a `link <repo-path> <home-path>` line to `install.sh` and re-run it.
 
 ## GitHub
 
