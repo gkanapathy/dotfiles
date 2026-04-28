@@ -6,8 +6,12 @@ if status is-interactive
     set -gx EDITOR nvim
     set -gx VISUAL $EDITOR
     set -gx LESS '--incsearch'
+    set -gx PIP_REQUIRE_VIRTUALENV 1
+
+    alias vim nvim
+    alias vi nvim
+    abbr --add lvim NVIM_APPNAME=lazyvim nvim
     #abbr --add k kubectl
-    #abbr --add lazyvim NVIM_APPNAME=lazyvim nvim
 
     # Dotfiles root (override if repo lives elsewhere)
     set -q DOTFILES; or set -gx DOTFILES "$HOME/dotfiles"
