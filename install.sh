@@ -40,4 +40,5 @@ link() {
 }
 
 # --- mappings: repo path  ->  $HOME-relative path ---
-link fish/config.fish .config/fish/config.fish
+link fish/config.fish    .config/fish/config.fish
+link ripgrep/ripgreprc   .ripgreprc
