@@ -7,6 +7,7 @@ Private personal configuration (Fish, Starship builder, etc.).
 | Path | Purpose |
 |------|---------|
 | `fish/config.fish` | Fish shell config (symlink target for `~/.config/fish/config.fish`) |
+| `nvim/` | Neovim config (symlink target for `~/.config/nvim`) |
 | `ripgrep/ripgreprc` | Ripgrep config (symlink target for `~/.ripgreprc`) |
 | `starship/` | `uv` project: `build_preset.py`, `overlays/*.toml`, `pyproject.toml` |
 
