@@ -55,4 +55,4 @@ format = '[[ $symbol( $environment) ](fg:color_aqua bg:color_bg3)]($style)'
 [custom.time_pill]
 command = 'date +%R'
 when = 'true'
-format = '[](fg:color_bg1)[  $output ](fg:color_fg0 bg:color_bg1)[ ](fg:color_bg1)'
+format = '[](fg:color_bg1)[  $output ](fg:color_fg0 bg:color_bg1)[](fg:color_bg1)'
