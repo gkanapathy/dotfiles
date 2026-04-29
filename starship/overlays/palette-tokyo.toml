@@ -3,8 +3,8 @@
 [palettes.gruvbox_dark]
 color_fg0 = "#c0caf5"
 color_bg1 = "#1a1b26"
-color_bg3 = "#3b4261"
-color_blue = "#16161e"
+color_bg3 = "#212736"
+color_blue = "#292e42"
 color_aqua = "#3b4261"
 color_green = "#9ece6a"
 color_orange = "#bb9af7"
