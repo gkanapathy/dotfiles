@@ -1,6 +1,6 @@
 # Agent notes: Starship preset merge (`starship/`)
 
-This directory is a **uv** Python project that **builds** `~/.config/starship.toml` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
+This directory holds a single PEP 723 Python script (`build_preset.py`) that **builds** `~/.config/starship.toml` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
 
 ## Pipeline
 
@@ -34,14 +34,13 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 
 ## Tooling
 
-- **Python** — `>=3.11` in `pyproject.toml`; project uses **`tomlkit`** for parse/serialize.
-- **uv** — `uv sync` in `starship/` creates **`.venv/`** (gitignored at repo root). Run the script with `uv run python build_preset.py …` from this directory (see `README.md`).
-- Do not commit `.venv/`.
+- **Python** — `>=3.11`; the only dependency is **`tomlkit`** for parse/serialize.
+- **uv** — `build_preset.py` carries a [PEP 723](https://peps.python.org/pep-0723/) inline-deps header, so `uv run --script build_preset.py …` works from anywhere with no virtualenv to manage. uv resolves `tomlkit` from its global cache.
 
 ## Theme selection
 
 - **`STARSHIP_THEME`** (Fish) — default **`gruvbox`**: merge **layout only** (upstream `[palettes.gruvbox_dark]` unchanged). Set to **`tokyo`**, **`catppuccin`**, or **`pastel`** to also merge `overlays/palette-$STARSHIP_THEME.toml`. Any other value with no matching palette file falls back to layout-only (same upstream gruvbox colors), silently.
-- **`DOTFILES`** — Root of the dotfiles repo; defaults to `$HOME/dotfiles`. Paths to overlays and the script are derived from this.
+- **`DOTFILES`** — Root of the dotfiles repo; auto-detected from the symlink target of `fish/config.fish` (see `../fish/config.fish:23`), so brew installs and local clones both resolve correctly without an env var. Paths to overlays and the script are derived from this.
 
 **Why no `palette-gruvbox.toml`:** Duplicating the upstream hex table would drift when Starship updates the preset; omitting `--palette` keeps true upstream colors for the default.
 

@@ -19,18 +19,19 @@ if status is-interactive
     abbr --add lvim NVIM_APPNAME=lazyvim nvim
     #abbr --add k kubectl
 
-    # Dotfiles root (override if repo lives elsewhere)
-    set -q DOTFILES; or set -gx DOTFILES "$HOME/dotfiles"
+    # Dotfiles root: derive from this file's actual location (resolves through symlinks).
+    # Works for local clones (~/dotfiles) and brew installs (#{opt_pkgshare}) alike.
+    set -q DOTFILES; or set -gx DOTFILES (path dirname (path dirname (path resolve (status filename))))
     # gruvbox = upstream preset colors (no palette overlay). tokyo | catppuccin | pastel = overlays/palette-<name>.toml
     set -q STARSHIP_THEME; or set -gx STARSHIP_THEME gruvbox
 
     set -l _palette "$DOTFILES/starship/overlays/palette-$STARSHIP_THEME.toml"
     if test "$STARSHIP_THEME" = gruvbox
-        starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
+        starship preset gruvbox-rainbow | uv run --script "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
     else if test -f "$_palette"
-        starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --palette "$_palette" --out "$HOME/.config/starship.toml"
+        starship preset gruvbox-rainbow | uv run --script "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --palette "$_palette" --out "$HOME/.config/starship.toml"
     else
-        starship preset gruvbox-rainbow | uv run --directory "$DOTFILES/starship" python "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
+        starship preset gruvbox-rainbow | uv run --script "$DOTFILES/starship/build_preset.py" --layout "$DOTFILES/starship/overlays/layout.toml" --out "$HOME/.config/starship.toml"
     end
 
     function starship_transient_rprompt_func
