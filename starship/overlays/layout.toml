@@ -48,3 +48,11 @@ format = '[[ $symbol( $context) ](fg:color_aqua bg:color_bg3)]($style)'
 
 [conda]
 format = '[[ $symbol( $environment) ](fg:color_aqua bg:color_bg3)]($style)'
+
+# Self-contained pill rendering of the current time, used by the right
+# transient prompt (see fish/config.fish: starship_transient_rprompt_func).
+# Caps reference color_bg1 so they track the active palette overlay.
+[custom.time_pill]
+command = 'date +%R'
+when = 'true'
+format = '[](fg:color_bg1)[  $output ](fg:color_fg0 bg:color_bg1)[ ](fg:color_bg1)'

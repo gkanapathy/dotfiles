@@ -34,7 +34,7 @@ if status is-interactive
     end
 
     function starship_transient_rprompt_func
-        starship module time
+        starship module custom.time_pill
     end
     starship init fish | source
     enable_transience
