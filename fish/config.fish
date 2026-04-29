@@ -1,4 +1,10 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Apple Silicon, Linuxbrew, Intel mac (in that order) — first one that exists wins.
+for brew_prefix in /opt/homebrew /home/linuxbrew/.linuxbrew /usr/local
+    if test -x "$brew_prefix/bin/brew"
+        eval "$($brew_prefix/bin/brew shellenv)"
+        break
+    end
+end
 set -gx COPYFILE_DISABLE 1
 
 if status is-interactive
