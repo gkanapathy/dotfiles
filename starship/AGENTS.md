@@ -47,7 +47,7 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 ## Adding a new theme
 
 1. Add `overlays/palette-<newname>.toml` with a full `[palettes.gruvbox_dark]` table (all keys the gruvbox preset expects).
-2. In **`../fish/config.fish`**, extend the branch logic if the name is not covered by “`gruvbox` → no palette” / “file exists → `--palette`” / “else warn + layout-only”.
+2. In **`../fish/config.fish`**, extend the branch logic if the name is not covered by “`gruvbox` → no palette” / “file exists → `--palette`” / “else layout-only”.
 
 ## Adding layout changes
 
