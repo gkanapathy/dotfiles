@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 from tomlkit import parse
@@ -79,9 +80,22 @@ def main() -> None:
 
     out = args.out.expanduser()
     out.parent.mkdir(parents=True, exist_ok=True)
-    tmp = out.with_suffix(out.suffix + ".tmp")
-    tmp.write_text(base.as_string(), encoding="utf-8")
-    tmp.replace(out)
+    tmp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            dir=out.parent,
+            prefix=f".{out.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as tmp:
+            tmp_path = Path(tmp.name)
+            tmp.write(base.as_string())
+        tmp_path.replace(out)
+    finally:
+        if tmp_path is not None and tmp_path.exists():
+            tmp_path.unlink()
 
 
 if __name__ == "__main__":

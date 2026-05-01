@@ -1,2 +1,36 @@
+# macOS
 .DS_Store
-*.pyc
+.AppleDouble
+.LSOverride
+Icon?
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local environment
+.env
+.env.*
+!.env.example
+.direnv/
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs and temporary files
+*.log
+*.tmp
+tmp/
+temp/
+
+# Local agent/tool state
+.claude/

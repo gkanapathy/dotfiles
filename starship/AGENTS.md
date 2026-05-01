@@ -1,14 +1,14 @@
 # Agent notes: Starship preset merge (`starship/`)
 
-This directory holds a single PEP 723 Python script (`build_preset.py`) that **builds** `~/.config/starship.toml` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
+This directory holds a small build helper (`starship/build`) plus a PEP 723 Python merge script (`build_preset.py`) that **builds** theme-specific configs under `~/.config/starship/` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
 
 ## Pipeline
 
 1. **stdin** — full TOML from `starship preset gruvbox-rainbow` (stdout when `-o` is omitted).
 2. **Merge** — `build_preset.py` deep-merges overlays in order: `--layout` first, then optional `--palette`.
-3. **stdout / file** — writes `--out` (default `~/.config/starship.toml`) via a temp file + atomic replace.
+3. **stdout / file** — writes `--out` via a unique temp file in the output directory + atomic replace.
 
-Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the pipeline before `starship init`.
+Shell integration lives in **`../fish/config.fish`**: interactive Fish sets `STARSHIP_CONFIG=~/.config/starship/$STARSHIP_THEME.toml` and calls `starship/build`, which skips generation when the output is current.
 
 ## Overlay design
 
@@ -39,7 +39,7 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 
 ## Theme selection
 
-- **`STARSHIP_THEME`** (Fish) — default **`gruvbox`**: merge **layout only** (upstream `[palettes.gruvbox_dark]` unchanged). Set to **`tokyo`**, **`catppuccin`**, or **`pastel`** to also merge `overlays/palette-$STARSHIP_THEME.toml`. Any other value with no matching palette file falls back to layout-only (same upstream gruvbox colors), silently.
+- **`STARSHIP_THEME`** (Fish) — default **`gruvbox`**: merge **layout only** (upstream `[palettes.gruvbox_dark]` unchanged). Set to **`tokyo`**, **`catppuccin`**, or **`pastel`** to also merge `overlays/palette-$STARSHIP_THEME.toml`. Any other value with no matching palette file falls back to layout-only (same upstream gruvbox colors), with a build warning.
 - **`DOTFILES`** — Root of the dotfiles repo; auto-detected from the symlink target of `fish/config.fish` (see `../fish/config.fish:23`), so brew installs and local clones both resolve correctly without an env var. Paths to overlays and the script are derived from this.
 
 **Why no `palette-gruvbox.toml`:** Duplicating the upstream hex table would drift when Starship updates the preset; omitting `--palette` keeps true upstream colors for the default.
@@ -47,7 +47,7 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish runs the 
 ## Adding a new theme
 
 1. Add `overlays/palette-<newname>.toml` with a full `[palettes.gruvbox_dark]` table (all keys the gruvbox preset expects).
-2. In **`../fish/config.fish`**, extend the branch logic if the name is not covered by “`gruvbox` → no palette” / “file exists → `--palette`” / “else layout-only”.
+2. No Fish changes are needed; `starship/build` automatically uses any matching `overlays/palette-<newname>.toml`.
 
 ## Adding layout changes
 

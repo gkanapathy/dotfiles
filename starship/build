@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# Build the generated Starship config when its inputs are stale.
+
+set -euo pipefail
+
+usage() {
+    cat >&2 <<'EOF'
+usage: starship/build [--theme NAME] [--out PATH] [--force]
+
+Builds ~/.config/starship/<theme>.toml from the gruvbox-rainbow preset and
+local overlays. Without --force, generation is skipped when the output is newer
+than all local inputs and the resolved starship binary.
+EOF
+}
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+THEME="${STARSHIP_THEME:-gruvbox}"
+OUT=""
+FORCE=0
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --theme)
+            [[ $# -ge 2 ]] || { usage; exit 2; }
+            THEME="$2"
+            shift 2
+            ;;
+        --out)
+            [[ $# -ge 2 ]] || { usage; exit 2; }
+            OUT="$2"
+            shift 2
+            ;;
+        --force)
+            FORCE=1
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+OUT="${OUT:-$HOME/.config/starship/$THEME.toml}"
+LAYOUT="$SCRIPT_DIR/overlays/layout.toml"
+PRESET_BUILDER="$SCRIPT_DIR/build_preset.py"
+PALETTE=""
+
+if [[ "$THEME" != "gruvbox" ]]; then
+    candidate="$SCRIPT_DIR/overlays/palette-$THEME.toml"
+    if [[ -f "$candidate" ]]; then
+        PALETTE="$candidate"
+    else
+        printf "starship/build: warning: no palette overlay for theme '%s'; using gruvbox colors\n" "$THEME" >&2
+    fi
+fi
+
+STARSHIP_BIN="$(command -v starship || true)"
+UV_BIN="$(command -v uv || true)"
+
+if [[ -z "$STARSHIP_BIN" ]]; then
+    printf 'starship/build: error: starship not found in PATH\n' >&2
+    exit 127
+fi
+
+if [[ -z "$UV_BIN" ]]; then
+    printf 'starship/build: error: uv not found in PATH\n' >&2
+    exit 127
+fi
+
+sources=("$SCRIPT_DIR/build" "$PRESET_BUILDER" "$LAYOUT" "$STARSHIP_BIN")
+if [[ -n "$PALETTE" ]]; then
+    sources+=("$PALETTE")
+fi
+
+for src in "${sources[@]}"; do
+    if [[ ! -e "$src" ]]; then
+        printf 'starship/build: error: source missing: %s\n' "$src" >&2
+        exit 1
+    fi
+done
+
+stale="$FORCE"
+if [[ ! -e "$OUT" ]]; then
+    stale=1
+elif [[ "$stale" -eq 0 ]]; then
+    for src in "${sources[@]}"; do
+        if [[ "$src" -nt "$OUT" ]]; then
+            stale=1
+            break
+        fi
+    done
+fi
+
+if [[ "$stale" -eq 0 ]]; then
+    exit 0
+fi
+
+cmd=("$UV_BIN" run --script "$PRESET_BUILDER" --layout "$LAYOUT" --out "$OUT")
+if [[ -n "$PALETTE" ]]; then
+    cmd+=(--palette "$PALETTE")
+fi
+
+"$STARSHIP_BIN" preset gruvbox-rainbow | "${cmd[@]}"

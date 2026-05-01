@@ -10,11 +10,11 @@ Personal configuration (bat, Fish, Starship builder, Neovim, ripgrep).
 | `fish/config.fish` | Fish shell config (symlink target for `~/.config/fish/config.fish`) |
 | `nvim/` | Neovim config (symlink target for `~/.config/nvim`) |
 | `ripgrep/ripgreprc` | Ripgrep config (symlink target for `~/.ripgreprc`) |
-| `starship/` | `build_preset.py` (PEP 723 inline-deps script) and `overlays/*.toml` |
+| `starship/` | Starship build helper, PEP 723 merge script, and `overlays/*.toml` |
 
 ## Starship
 
-See [`starship/README.md`](starship/README.md). Interactive Fish sessions rebuild `~/.config/starship.toml` from `starship preset gruvbox-rainbow` plus overlays before `starship init`.
+See [`starship/README.md`](starship/README.md). Interactive Fish sessions keep a theme-specific generated config under `~/.config/starship/` current before `starship init`.
 
 ## Install on a new machine
 
