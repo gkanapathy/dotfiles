@@ -14,7 +14,7 @@ Personal configuration (bat, Fish, Starship builder, Neovim, ripgrep).
 
 ## Starship
 
-See [`starship/README.md`](starship/README.md). Interactive Fish sessions keep a theme-specific generated config under `~/.config/starship/` current before `starship init`.
+See [`starship/README.md`](starship/README.md). Interactive Fish sessions keep `~/.config/starship.toml` current before `starship init`.
 
 ## Install on a new machine
 

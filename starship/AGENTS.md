@@ -1,6 +1,6 @@
 # Agent notes: Starship preset merge (`starship/`)
 
-This directory holds a small build helper (`starship/build`) plus a PEP 723 Python merge script (`build_preset.py`) that **builds** theme-specific configs under `~/.config/starship/` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
+This directory holds a small build helper (`starship/build`) plus a PEP 723 Python merge script (`build_preset.py`) that **builds** `~/.config/starship.toml` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
 
 ## Pipeline
 
@@ -8,7 +8,7 @@ This directory holds a small build helper (`starship/build`) plus a PEP 723 Pyth
 2. **Merge** — `build_preset.py` deep-merges overlays in order: `--layout` first, then optional `--palette`.
 3. **stdout / file** — writes `--out` via a unique temp file in the output directory + atomic replace.
 
-Shell integration lives in **`../fish/config.fish`**: interactive Fish sets `STARSHIP_CONFIG=~/.config/starship/$STARSHIP_THEME.toml` and calls `starship/build`, which skips generation when the output is current.
+Shell integration lives in **`../fish/config.fish`**: interactive Fish calls `starship/build`, which skips generation when the output header fingerprint matches the selected theme, local inputs, and Starship version.
 
 ## Overlay design
 

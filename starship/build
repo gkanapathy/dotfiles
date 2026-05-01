@@ -7,9 +7,9 @@ usage() {
     cat >&2 <<'EOF'
 usage: starship/build [--theme NAME] [--out PATH] [--force]
 
-Builds ~/.config/starship/<theme>.toml from the gruvbox-rainbow preset and
-local overlays. Without --force, generation is skipped when the output is newer
-than all local inputs and the resolved starship binary.
+Builds ~/.config/starship.toml from the gruvbox-rainbow preset and local
+overlays. Without --force, generation is skipped when the output header
+fingerprint matches the selected theme, local inputs, and starship version.
 EOF
 }
 
@@ -45,10 +45,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-OUT="${OUT:-$HOME/.config/starship/$THEME.toml}"
+OUT="${OUT:-$HOME/.config/starship.toml}"
 LAYOUT="$SCRIPT_DIR/overlays/layout.toml"
 PRESET_BUILDER="$SCRIPT_DIR/build_preset.py"
 PALETTE=""
+FINGERPRINT_PREFIX="# dotfiles-starship-fingerprint:"
 
 if [[ "$THEME" != "gruvbox" ]]; then
     candidate="$SCRIPT_DIR/overlays/palette-$THEME.toml"
@@ -72,7 +73,7 @@ if [[ -z "$UV_BIN" ]]; then
     exit 127
 fi
 
-sources=("$SCRIPT_DIR/build" "$PRESET_BUILDER" "$LAYOUT" "$STARSHIP_BIN")
+sources=("$SCRIPT_DIR/build" "$PRESET_BUILDER" "$LAYOUT")
 if [[ -n "$PALETTE" ]]; then
     sources+=("$PALETTE")
 fi
@@ -84,23 +85,34 @@ for src in "${sources[@]}"; do
     fi
 done
 
+fingerprint="$(
+    {
+        printf 'theme=%s\n' "$THEME"
+        printf 'starship=%s\n' "$("$STARSHIP_BIN" --version)"
+        printf 'palette=%s\n' "${PALETTE:-none}"
+        for src in "${sources[@]}"; do
+            printf 'file=%s\n' "$src"
+            shasum -a 256 "$src"
+        done
+    } | shasum -a 256 | awk '{print $1}'
+)"
+header="$FINGERPRINT_PREFIX $fingerprint"
+
 stale="$FORCE"
 if [[ ! -e "$OUT" ]]; then
     stale=1
 elif [[ "$stale" -eq 0 ]]; then
-    for src in "${sources[@]}"; do
-        if [[ "$src" -nt "$OUT" ]]; then
-            stale=1
-            break
-        fi
-    done
+    current_header="$(head -n 1 "$OUT")"
+    if [[ "$current_header" != "$header" ]]; then
+        stale=1
+    fi
 fi
 
 if [[ "$stale" -eq 0 ]]; then
     exit 0
 fi
 
-cmd=("$UV_BIN" run --script "$PRESET_BUILDER" --layout "$LAYOUT" --out "$OUT")
+cmd=("$UV_BIN" run --script "$PRESET_BUILDER" --layout "$LAYOUT" --out "$OUT" --header "$header")
 if [[ -n "$PALETTE" ]]; then
     cmd+=(--palette "$PALETTE")
 fi

@@ -1,15 +1,15 @@
 # Starship preset merge
 
-Build theme-specific generated Starship configs from the upstream **gruvbox-rainbow** preset plus local overlays:
+Build `~/.config/starship.toml` from the upstream **gruvbox-rainbow** preset plus local overlays:
 
 1. **`overlays/layout.toml`** — catppuccin-style tail (`$cmd_duration` → `$line_break` → `$character`) with `[line_break] disabled = false`, plus shared `[cmd_duration]` and docker/conda fg tweaks.
 2. **`overlays/palette-*.toml`** (optional) — remap `[palettes.gruvbox_dark]` only for alternate themes (`tokyo`, `catppuccin`, `pastel`). Default **`gruvbox`** uses the preset’s built-in palette (no palette file).
 
 ## Build helper
 
-Interactive Fish sessions call `starship/build` before `starship init`. The helper skips work when the generated config is newer than the local inputs and the resolved `starship` binary.
+Interactive Fish sessions call `starship/build` before `starship init`. The helper skips work when the generated config's header fingerprint matches the selected theme, local inputs, and Starship version.
 
-Generated configs live at `~/.config/starship/<theme>.toml`, and Fish exports `STARSHIP_CONFIG` to that path.
+The generated config lives at Starship's default path, `~/.config/starship.toml`.
 
 ```bash
 starship/build --theme tokyo --force
@@ -26,7 +26,7 @@ starship preset gruvbox-rainbow \
       --palette overlays/palette-catppuccin.toml
 ```
 
-`--out` defaults to `~/.config/starship.toml` when calling `build_preset.py` directly. Prefer `starship/build` for normal use.
+`--out` defaults to `~/.config/starship.toml`. Prefer `starship/build` for normal use.
 
 ## Themes
 

@@ -25,16 +25,12 @@ if status is-interactive
     # gruvbox = upstream preset colors (no palette overlay). tokyo | catppuccin | pastel = overlays/palette-<name>.toml
     set -q STARSHIP_THEME; or set -gx STARSHIP_THEME gruvbox
 
-    set -gx STARSHIP_CONFIG "$HOME/.config/starship/$STARSHIP_THEME.toml"
     if test -x "$DOTFILES/starship/build"
-        if not "$DOTFILES/starship/build" --theme "$STARSHIP_THEME" --out "$STARSHIP_CONFIG"
+        if not "$DOTFILES/starship/build" --theme "$STARSHIP_THEME"
             printf 'warning: failed to build Starship config for theme %s\n' "$STARSHIP_THEME" >&2
         end
     else
         printf 'warning: Starship build helper missing: %s\n' "$DOTFILES/starship/build" >&2
-    end
-    if not test -f "$STARSHIP_CONFIG"
-        set -e STARSHIP_CONFIG
     end
 
     function starship_transient_rprompt_func

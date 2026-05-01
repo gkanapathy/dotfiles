@@ -63,6 +63,11 @@ def main() -> None:
         default=Path(os.path.expanduser("~/.config/starship.toml")),
         help="Output path (default: ~/.config/starship.toml).",
     )
+    ap.add_argument(
+        "--header",
+        default=None,
+        help="Optional comment header to prepend to the generated TOML.",
+    )
     args = ap.parse_args()
 
     stdin = sys.stdin.read()
@@ -77,6 +82,9 @@ def main() -> None:
     merge_document(base, args.layout)
     if args.palette is not None:
         merge_document(base, args.palette)
+    output = base.as_string()
+    if args.header is not None:
+        output = f"{args.header}\n{output}"
 
     out = args.out.expanduser()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -91,7 +99,7 @@ def main() -> None:
             delete=False,
         ) as tmp:
             tmp_path = Path(tmp.name)
-            tmp.write(base.as_string())
+            tmp.write(output)
         tmp_path.replace(out)
     finally:
         if tmp_path is not None and tmp_path.exists():
