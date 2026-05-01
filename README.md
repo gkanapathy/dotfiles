@@ -1,11 +1,12 @@
 # dotfiles
 
-Personal configuration (Fish, Starship builder, Neovim, ripgrep).
+Personal configuration (bat, Fish, Starship builder, Neovim, ripgrep).
 
 ## Layout
 
 | Path | Purpose |
 |------|---------|
+| `bat/config` | bat config (symlink target for `~/.config/bat/config`) |
 | `fish/config.fish` | Fish shell config (symlink target for `~/.config/fish/config.fish`) |
 | `nvim/` | Neovim config (symlink target for `~/.config/nvim`) |
 | `ripgrep/ripgreprc` | Ripgrep config (symlink target for `~/.ripgreprc`) |
@@ -24,13 +25,13 @@ brew install gkanapathy/tap/dotfiles
 dotfiles-install
 ```
 
-This pulls in `fish`, `neovim`, `ripgrep`, `starship`, and `uv` as dependencies, then `dotfiles-install` symlinks the tracked configs into `$HOME` (any pre-existing files are backed up to `<path>.backup.<timestamp>`). `$DOTFILES` is auto-detected from the symlink target of `fish/config.fish`, so no env var setup is needed — even after `brew upgrade dotfiles`.
+This pulls in `bat`, `fish`, `neovim`, `ripgrep`, `starship`, and `uv` as dependencies, then `dotfiles-install` symlinks the tracked configs into `$HOME` (any pre-existing files are backed up to `<path>.backup.<timestamp>`). `$DOTFILES` is auto-detected from the symlink target of `fish/config.fish`, so no env var setup is needed — even after `brew upgrade dotfiles`.
 
 ### From a local clone
 
 1. Clone this repo (e.g. `~/dotfiles`).
 2. Run `./install.sh` to symlink tracked dotfiles into `$HOME`.
-3. Make sure `fish`, `neovim`, `ripgrep`, `starship`, and `uv` are installed.
+3. Make sure `bat`, `fish`, `neovim`, `ripgrep`, `starship`, and `uv` are installed.
 
 To track a new dotfile, append a `link <repo-path> <home-path>` line to `install.sh` and re-run it.
 
