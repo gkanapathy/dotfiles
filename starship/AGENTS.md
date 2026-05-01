@@ -1,14 +1,14 @@
 # Agent notes: Starship preset merge (`starship/`)
 
-This directory holds a small build helper (`starship/build`) plus a PEP 723 Python merge script (`build_preset.py`) that **builds** `~/.config/starship.toml` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
+This directory holds a small build helper (`starship/build`) that **builds** `~/.config/starship.toml` from the upstream **`starship preset gruvbox-rainbow`** output plus local TOML overlays. It does not fork upstream Starship presets in-repo; it merges at generation time.
 
 ## Pipeline
 
 1. **stdin** — full TOML from `starship preset gruvbox-rainbow` (stdout when `-o` is omitted).
-2. **Merge** — `build_preset.py` deep-merges overlays in order: `--layout` first, then optional `--palette`.
+2. **Merge** — `yq eval-all` deep-merges overlays in order: `overlays/layout.toml` first, then optional `overlays/palette-<theme>.toml`.
 3. **stdout / file** — writes `--out` via a unique temp file in the output directory + atomic replace.
 
-Shell integration lives in **`../fish/config.fish`**: interactive Fish calls `starship/build`, which skips generation when the output header fingerprint matches the selected theme, local inputs, and Starship version.
+Shell integration lives in **`../fish/config.fish`**: interactive Fish calls `starship/build`, which skips generation when the output header fingerprint matches the selected theme, local inputs, Starship version, and yq version.
 
 ## Overlay design
 
@@ -26,16 +26,14 @@ Shell integration lives in **`../fish/config.fish`**: interactive Fish calls `st
 - **cmd_duration** — Catppuccin-inspired `[cmd_duration]` block; styles use **`color_bg1` / `color_fg0`** so they track the active palette overlay.
 - **Docker / conda** — Prefer **`fg:color_aqua`** (palette-driven) instead of hardcoded hex in formats.
 
-## Merge semantics (`build_preset.py`)
+## Merge semantics (`starship/build`)
 
-- **Deep merge** on nested tables: overlay keys recurse into existing tables; scalars and non-table values in the overlay **replace** the base.
-- **Array-of-tables** (`[[...]]`): if both sides have the same key as AoT, the overlay **replaces** the whole array (no element-wise merge).
-- **Root document type** — `tomlkit.parse()` returns `TOMLDocument`, not `tomlkit.items.Table`; merge logic treats `TOMLDocument` and `Table` as “table-like” for recursion.
+- **Deep merge** — `yq eval-all '. as $item ireduce ({}; . * $item)'` merges the upstream preset, layout overlay, and optional palette overlay in that order.
+- **Generated formatting** — yq output is valid Starship TOML but may escape glyphs and flatten multiline strings; hand-edited source should stay in overlays.
 
 ## Tooling
 
-- **Python** — `>=3.11`; the only dependency is **`tomlkit`** for parse/serialize.
-- **uv** — `build_preset.py` carries a [PEP 723](https://peps.python.org/pep-0723/) inline-deps header, so `uv run --script build_preset.py …` works from anywhere with no virtualenv to manage. uv resolves `tomlkit` from its global cache.
+- **yq** — Requires Mike Farah's yq with TOML input/output support (`-p=toml -o=toml`).
 
 ## Theme selection
 

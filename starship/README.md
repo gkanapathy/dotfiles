@@ -7,7 +7,7 @@ Build `~/.config/starship.toml` from the upstream **gruvbox-rainbow** preset plu
 
 ## Build helper
 
-Interactive Fish sessions call `starship/build` before `starship init`. The helper skips work when the generated config's header fingerprint matches the selected theme, local inputs, and Starship version.
+Interactive Fish sessions call `starship/build` before `starship init`. The helper uses `yq` to merge TOML and skips work when the generated config's header fingerprint matches the selected theme, local inputs, Starship version, and yq version.
 
 The generated config lives at Starship's default path, `~/.config/starship.toml`.
 
@@ -17,16 +17,15 @@ starship/build --theme tokyo --force
 
 ## Low-level build
 
-`build_preset.py` is a [PEP 723](https://peps.python.org/pep-0723/) inline-deps script — `uv run --script` resolves `tomlkit` from its global cache; no virtualenv needed.
+`starship/build` uses `yq eval-all` to deep-merge the upstream preset, layout overlay, and optional palette overlay.
 
 ```bash
 starship preset gruvbox-rainbow \
-  | uv run --script build_preset.py \
-      --layout overlays/layout.toml \
-      --palette overlays/palette-catppuccin.toml
+  | yq eval-all -p=toml -o=toml '. as $item ireduce ({}; . * $item)' \
+      - overlays/layout.toml overlays/palette-catppuccin.toml
 ```
 
-`--out` defaults to `~/.config/starship.toml`. Prefer `starship/build` for normal use.
+`starship/build --out` defaults to `~/.config/starship.toml`.
 
 ## Themes
 

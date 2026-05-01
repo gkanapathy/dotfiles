@@ -9,7 +9,8 @@ usage: starship/build [--theme NAME] [--out PATH] [--force]
 
 Builds ~/.config/starship.toml from the gruvbox-rainbow preset and local
 overlays. Without --force, generation is skipped when the output header
-fingerprint matches the selected theme, local inputs, and starship version.
+fingerprint matches the selected theme, local inputs, Starship version, and yq
+version.
 EOF
 }
 
@@ -47,7 +48,6 @@ done
 
 OUT="${OUT:-$HOME/.config/starship.toml}"
 LAYOUT="$SCRIPT_DIR/overlays/layout.toml"
-PRESET_BUILDER="$SCRIPT_DIR/build_preset.py"
 PALETTE=""
 FINGERPRINT_PREFIX="# dotfiles-starship-fingerprint:"
 
@@ -61,19 +61,19 @@ if [[ "$THEME" != "gruvbox" ]]; then
 fi
 
 STARSHIP_BIN="$(command -v starship || true)"
-UV_BIN="$(command -v uv || true)"
+YQ_BIN="$(command -v yq || true)"
 
 if [[ -z "$STARSHIP_BIN" ]]; then
     printf 'starship/build: error: starship not found in PATH\n' >&2
     exit 127
 fi
 
-if [[ -z "$UV_BIN" ]]; then
-    printf 'starship/build: error: uv not found in PATH\n' >&2
+if [[ -z "$YQ_BIN" ]]; then
+    printf 'starship/build: error: yq not found in PATH\n' >&2
     exit 127
 fi
 
-sources=("$SCRIPT_DIR/build" "$PRESET_BUILDER" "$LAYOUT")
+sources=("$SCRIPT_DIR/build" "$LAYOUT")
 if [[ -n "$PALETTE" ]]; then
     sources+=("$PALETTE")
 fi
@@ -89,6 +89,7 @@ fingerprint="$(
     {
         printf 'theme=%s\n' "$THEME"
         printf 'starship=%s\n' "$("$STARSHIP_BIN" --version)"
+        printf 'yq=%s\n' "$("$YQ_BIN" --version)"
         printf 'palette=%s\n' "${PALETTE:-none}"
         for src in "${sources[@]}"; do
             printf 'file=%s\n' "$src"
@@ -112,9 +113,25 @@ if [[ "$stale" -eq 0 ]]; then
     exit 0
 fi
 
-cmd=("$UV_BIN" run --script "$PRESET_BUILDER" --layout "$LAYOUT" --out "$OUT" --header "$header")
+out_dir="$(dirname "$OUT")"
+out_name="$(basename "$OUT")"
+mkdir -p "$out_dir"
+tmp="$(mktemp "$out_dir/.$out_name.XXXXXX")"
+cleanup() {
+    rm -f "$tmp"
+}
+trap cleanup EXIT
+
+inputs=(- "$LAYOUT")
 if [[ -n "$PALETTE" ]]; then
-    cmd+=(--palette "$PALETTE")
+    inputs+=("$PALETTE")
 fi
 
-"$STARSHIP_BIN" preset gruvbox-rainbow | "${cmd[@]}"
+{
+    printf '%s\n' "$header"
+    "$STARSHIP_BIN" preset gruvbox-rainbow \
+        | "$YQ_BIN" eval-all -p=toml -o=toml '. as $item ireduce ({}; . * $item)' "${inputs[@]}"
+} > "$tmp"
+
+mv "$tmp" "$OUT"
+trap - EXIT
