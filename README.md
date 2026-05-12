@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal configuration (bat, Fish, Starship builder, Neovim, ripgrep).
+Personal configuration (bat, Fish, Starship builder, Neovim, ripgrep, tmux).
 
 ## Layout
 
@@ -11,6 +11,7 @@ Personal configuration (bat, Fish, Starship builder, Neovim, ripgrep).
 | `nvim/` | Neovim config (symlink target for `~/.config/nvim`) |
 | `ripgrep/ripgreprc` | Ripgrep config (symlink target for `~/.ripgreprc`) |
 | `starship/` | Starship build helper and `overlays/*.toml` |
+| `tmux/` | tmux config (symlink target for `~/.config/tmux`) |
 
 ## Starship
 

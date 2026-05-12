@@ -44,3 +44,4 @@ link bat/config          .config/bat/config
 link fish/config.fish    .config/fish/config.fish
 link nvim                .config/nvim
 link ripgrep/ripgreprc   .ripgreprc
+link tmux                .config/tmux
