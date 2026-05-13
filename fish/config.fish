@@ -11,7 +11,7 @@ if status is-interactive
     set -gx RIPGREP_CONFIG_PATH "$HOME/.ripgreprc"
     set -gx EDITOR nvim
     set -gx VISUAL $EDITOR
-    set -gx LESS '--incsearch'
+    set -gx LESS '--incsearch --quit-if-one-screen'
     set -gx PIP_REQUIRE_VIRTUALENV 1
 
     alias vim nvim
