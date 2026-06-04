@@ -45,3 +45,4 @@ link fish/config.fish    .config/fish/config.fish
 link nvim                .config/nvim
 link ripgrep/ripgreprc   .ripgreprc
 link tmux                .config/tmux
+link zellij              .config/zellij

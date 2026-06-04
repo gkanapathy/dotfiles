@@ -1,0 +1,2 @@
+// Zellij config — intentionally empty: upstream defaults are used verbatim.
+// Add overrides here as needed; see `zellij setup --dump-config` for all options.
