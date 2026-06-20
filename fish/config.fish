@@ -16,10 +16,6 @@ if status is-interactive
 
     alias vim nvim
     alias vi nvim
-    alias claude 'claude --worktree'
-    alias cursor 'cursor --worktree'
-    alias agent 'agent --worktree'
-    alias cursor-agent 'cursor-agent --worktree'
     abbr --add lvim NVIM_APPNAME=lazyvim nvim
     #abbr --add k kubectl
 
