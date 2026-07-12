@@ -42,6 +42,7 @@ link() {
 # --- mappings: repo path  ->  $HOME-relative path ---
 link bat/config          .config/bat/config
 link fish/config.fish    .config/fish/config.fish
+link ghostty/ghostty.config .config/ghostty/config.ghostty
 link nvim                .config/nvim
 link ripgrep/ripgreprc   .ripgreprc
 link tmux                .config/tmux
