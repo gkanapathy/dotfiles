@@ -7,3 +7,7 @@ end
 if vim.g.neovide then
   vim.o.guifont = 'BlexMono Nerd Font,MesloLGS Nerd Font Mono,' .. vim.o.guifont
 end
+
+vim.pack.add({
+  'https://github.com/MeanderingProgrammer/render-markdown.nvim',
+})
